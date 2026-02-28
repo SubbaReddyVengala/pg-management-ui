@@ -1,0 +1,23 @@
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h2 class="app-title">PG Manager</h2>
+    <p class="app-subtitle">Management System</p>
+  </div>
+ 
+  <nav class="nav-links">
+    <a
+      *ngFor="let item of navItems"
+      [routerLink]="item.path"
+      routerLinkActive="active"
+      class="nav-item">
+      <span class="nav-icon">{{ item.icon }}</span>
+      <span class="nav-label">{{ item.label }}</span>
+    </a>
+  </nav>
+ 
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="onLogout()">
+      Logout
+    </button>
+  </div>
+</aside>

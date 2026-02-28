@@ -1,0 +1,12 @@
+.layout-wrapper {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+ 
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  background: #f5f6fa;
+  padding: 24px;
+}
