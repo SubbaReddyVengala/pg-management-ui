@@ -1,21 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { NgFor } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+import { AuthService } from '../../core/services/auth.service';
  
 interface NavItem {
   label: string;
   path: string;
   icon: string;
+  adminOnly?: boolean;
 }
  
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, NgFor],
+  imports: [RouterLink, RouterLinkActive, AsyncPipe],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
+ 
+  authService = inject(AuthService);
+ 
+  // currentUser$ is an Observable — template uses async pipe to subscribe
+  currentUser$ = this.authService.currentUser$;
  
   navItems: NavItem[] = [
     { label: 'Dashboard', path: '/dashboard', icon: '⬛' },
@@ -25,9 +32,7 @@ export class SidebarComponent {
     { label: 'Reports',   path: '/reports',   icon: '📊' },
   ];
  
-  onLogout() {
-    // Phase 2 will implement this properly
-    localStorage.clear();
-    window.location.href = '/login';
+  logout(): void {
+    this.authService.logout();
   }
 }

@@ -1,23 +1,42 @@
 <aside class="sidebar">
+ 
   <div class="sidebar-header">
-    <h2 class="app-title">PG Manager</h2>
-    <p class="app-subtitle">Management System</p>
+    <div class="logo-mark">PG</div>
+    <div>
+      <h2 class="app-title">PG Manager</h2>
+      <p class="app-subtitle">Management System</p>
+    </div>
   </div>
  
   <nav class="nav-links">
-    <a
-      *ngFor="let item of navItems"
-      [routerLink]="item.path"
-      routerLinkActive="active"
-      class="nav-item">
-      <span class="nav-icon">{{ item.icon }}</span>
-      <span class="nav-label">{{ item.label }}</span>
-    </a>
+    @for (item of navItems; track item.path) {
+      <a
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        class="nav-item">
+        <span class="nav-icon">{{ item.icon }}</span>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+    }
   </nav>
  
+  <!-- User info at bottom -->
+  @if (currentUser$ | async; as user) {
+    <div class="user-info">
+      <div class="user-avatar">
+        {{ user.email.charAt(0).toUpperCase() }}
+      </div>
+      <div class="user-details">
+        <span class="user-email">{{ user.email }}</span>
+        <span class="user-role">{{ user.role }}</span>
+      </div>
+    </div>
+  }
+ 
   <div class="sidebar-footer">
-    <button class="logout-btn" (click)="onLogout()">
-      Logout
+    <button class="logout-btn" (click)="logout()">
+      ⬅ Sign Out
     </button>
   </div>
+ 
 </aside>
