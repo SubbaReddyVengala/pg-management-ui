@@ -1,0 +1,16 @@
+<div class="modal-overlay" (click)="cancelled.emit()"></div>
+ 
+<div class="confirm-dialog">
+  <div class="confirm-icon">🗑</div>
+  <h3>Delete Room {{ roomNumber }}?</h3>
+  <p>This action cannot be undone.
+     All data for this room will be permanently deleted.</p>
+  <div class="confirm-actions">
+    <button class="btn btn-secondary" (click)="cancelled.emit()">
+      Cancel
+    </button>
+    <button class="btn btn-danger" (click)="confirmed.emit()">
+      Yes, Delete
+    </button>
+  </div>
+</div>

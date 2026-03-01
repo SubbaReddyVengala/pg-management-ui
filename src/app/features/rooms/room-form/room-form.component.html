@@ -1,0 +1,89 @@
+<!-- Overlay backdrop -->
+<div class="modal-overlay" (click)="onCancel()"></div>
+ 
+<!-- Modal panel -->
+<div class="modal-panel">
+ 
+  <div class="modal-header">
+    <h2>{{ isEditMode ? "Edit Room" : "Add New Room" }}</h2>
+    <button class="close-btn" (click)="onCancel()">✕</button>
+  </div>
+ 
+  @if (errorMsg) {
+    <div class="form-error-alert">⚠ {{ errorMsg }}</div>
+  }
+ 
+  <form [formGroup]="roomForm" (ngSubmit)="onSubmit()" class="modal-form">
+ 
+    <!-- Row 1: Room Number + Floor -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>Room Number *</label>
+        <input type="text" formControlName="roomNumber"
+               placeholder="e.g. 101"
+               [class.input-error]="fc('roomNumber').invalid && fc('roomNumber').touched" />
+        @if (fc("roomNumber").touched && fc("roomNumber").hasError("required")) {
+          <span class="field-error">Room number is required</span>
+        }
+      </div>
+      <div class="form-group">
+        <label>Floor *</label>
+        <input type="number" formControlName="floor" min="1"
+               [class.input-error]="fc('floor').invalid && fc('floor').touched" />
+        @if (fc("floor").touched && fc("floor").hasError("min")) {
+          <span class="field-error">Floor must be at least 1</span>
+        }
+      </div>
+    </div>
+ 
+    <!-- Row 2: Room Type + Max Capacity -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>Room Type *</label>
+        <select formControlName="roomType">
+          @for (type of roomTypes; track type) {
+            <option [value]="type">{{ type }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Max Capacity *</label>
+        <input type="number" formControlName="maxCapacity" min="1" max="10"
+               [class.input-error]="fc('maxCapacity').invalid && fc('maxCapacity').touched" />
+        @if (fc("maxCapacity").touched && fc("maxCapacity").hasError("min")) {
+          <span class="field-error">Minimum capacity is 1</span>
+        }
+      </div>
+    </div>
+ 
+    <!-- Row 3: Monthly Rent -->
+    <div class="form-group">
+      <label>Monthly Rent (₹) *</label>
+      <input type="number" formControlName="monthlyRent" min="0"
+             placeholder="e.g. 8500"
+             [class.input-error]="fc('monthlyRent').invalid && fc('monthlyRent').touched" />
+      @if (fc("monthlyRent").touched && fc("monthlyRent").hasError("required")) {
+        <span class="field-error">Monthly rent is required</span>
+      }
+    </div>
+ 
+    <!-- Row 4: Amenities -->
+    <div class="form-group">
+      <label>Amenities <span class="optional">(optional)</span></label>
+      <input type="text" formControlName="amenities"
+             placeholder="e.g. AC, Attached Bathroom, WiFi" />
+    </div>
+ 
+    <!-- Actions -->
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+        @if (isLoading) { Saving... }
+        @else { {{ isEditMode ? "Update Room" : "Create Room" }} }
+      </button>
+    </div>
+ 
+  </form>
+</div>

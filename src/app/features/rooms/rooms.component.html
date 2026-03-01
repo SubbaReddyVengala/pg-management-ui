@@ -1,7 +1,121 @@
+<!-- Page Header -->
 <div class="page-header">
-  <h1>Rooms</h1>
-  <span class="badge badge-info">Phase 3</span>
+  <div>
+    <h1>Room Management</h1>
+    <p class="page-subtitle">Manage all rooms in your PG</p>
+  </div>
+  <button class="btn btn-primary" (click)="openCreate()">
+    + Add Room
+  </button>
 </div>
-<div class="card">
-  <p>Rooms content will be added in Phase 3.</p>
+ 
+<!-- Filters -->
+<div class="filters-bar">
+  <div class="search-box">
+    <input
+      type="text"
+      placeholder="Search room number..."
+      [(ngModel)]="searchText"
+      (ngModelChange)="onFilterChange()" />
+  </div>
+  <div class="status-filters">
+    @for (status of statusOptions; track status) {
+      <button
+        class="filter-btn"
+        [class.active]="selectedStatus === status"
+        (click)="selectedStatus = status; onFilterChange()">
+        {{ status }}
+      </button>
+    }
+  </div>
 </div>
+ 
+<!-- Error -->
+@if (errorMsg) {
+  <div class="error-box">⚠ {{ errorMsg }}</div>
+}
+ 
+<!-- Loading -->
+@if (isLoading) {
+  <div class="card"><p class="loading-text">Loading rooms...</p></div>
+}
+ 
+<!-- Rooms Table -->
+@if (!isLoading && filteredRooms.length > 0) {
+  <div class="card table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Room No.</th>
+          <th>Floor</th>
+          <th>Type</th>
+          <th>Capacity</th>
+          <th>Occupancy</th>
+          <th>Rent / Month</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+  @for (room of filteredRooms; track room.id) {
+    <tr>
+      <td><strong>{{ room.roomNumber }}</strong></td>
+      <td>Floor {{ room.floor }}</td>
+      <td>{{ room.roomType }}</td>
+      <td>{{ room.maxCapacity }}</td>
+      <td>{{ room.currentOccupancy }} / {{ room.maxCapacity }}</td>
+      <td class="rent-amount">₹{{ room.monthlyRent.toLocaleString('en-IN') }}</td>
+      <td>
+        <span class="badge" [ngClass]="getStatusClass(room.status)">
+          {{ room.status }}
+        </span>
+      </td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-icon edit" (click)="openEdit(room)" title="Edit">✏</button>
+          <button
+            class="btn-icon delete"
+            (click)="openDelete(room)"
+            [disabled]="room.status === 'OCCUPIED'"
+            title="Delete">
+            🗑
+          </button>
+        </div>
+      </td>
+    </tr>
+  }
+</tbody>
+    </table>
+  </div>
+}
+ 
+<!-- Empty State -->
+@if (!isLoading && filteredRooms.length === 0 && !errorMsg) {
+  <div class="card empty-state">
+    <p class="empty-icon">🏠</p>
+    <p class="empty-title">No rooms found</p>
+    <p class="empty-sub">
+      @if (searchText || selectedStatus !== "ALL") {
+        Try changing your filters
+      } @else {
+        Click "Add Room" to create your first room
+      }
+    </p>
+  </div>
+}
+ 
+<!-- Create / Edit Modal -->
+@if (showForm) {
+  <app-room-form
+    [room]="editRoom"
+    (saved)="onFormSaved()"
+    (cancelled)="onFormCancelled()" />
+}
+ 
+<!-- Delete Confirmation Modal -->
+@if (showDeleteConfirm && roomToDelete) {
+  <app-delete-confirm
+    [roomNumber]="roomToDelete.roomNumber"
+    (confirmed)="onDeleteConfirmed()"
+    (cancelled)="onDeleteCancelled()" />
+}

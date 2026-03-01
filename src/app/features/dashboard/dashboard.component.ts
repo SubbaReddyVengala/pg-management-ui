@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CurrencyPipe, DecimalPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ReportService } from '../../core/services/report.service';
 import { DashboardStats } from '../../core/models/report.model';
 import { StatCardComponent } from './stat-card/stat-card.component';
@@ -7,7 +7,7 @@ import { StatCardComponent } from './stat-card/stat-card.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [StatCardComponent, CurrencyPipe, DecimalPipe, NgClass],
+  imports: [StatCardComponent, NgClass],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
