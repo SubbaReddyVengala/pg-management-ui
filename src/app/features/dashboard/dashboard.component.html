@@ -1,7 +1,131 @@
+<!-- Page Header -->
 <div class="page-header">
-  <h1>Dashboard</h1>
-  <span class="badge badge-info">Phase 3</span>
+  <div>
+    <h1>Dashboard</h1>
+    <p class="page-subtitle">{{ currentMonth }} {{ currentYear }} — Live Overview</p>
+  </div>
+  <button class="btn btn-secondary" (click)="loadDashboard()">
+    ↻ Refresh
+  </button>
 </div>
-<div class="card">
-  <p>Dashboard content will be added in Phase 3.</p>
+ 
+<!-- Loading State -->
+@if (isLoading) {
+  <div class="stats-grid">
+    @for (i of [1,2,3,4,5]; track i) {
+      <div class="skeleton-card"></div>
+    }
+  </div>
+}
+ 
+<!-- Error State -->
+@if (errorMsg) {
+  <div class="error-box">
+    <p>⚠ {{ errorMsg }}</p>
+    <button class="btn btn-primary" (click)="loadDashboard()">
+      Try Again
+    </button>
+  </div>
+}
+ 
+<!-- Stats Grid — shown when data loaded -->
+@if (!isLoading && !errorMsg && stats) {
+ 
+  <div class="stats-grid">
+ 
+    <app-stat-card
+  title="Total Rooms"
+  [value]="stats.totalRooms.toString()"
+  icon="🏠"
+  color="blue"
+  [subtitle]="stats.availableRooms + ' available'" />
+
+<app-stat-card
+  title="Occupied Rooms"
+  [value]="stats.occupiedRooms.toString()"
+  icon="🔑"
+  color="green"
+  [subtitle]="formatRate(stats.occupancyRatePercent) + ' occupancy rate'" />
+
+<app-stat-card
+  title="Active Tenants"
+  [value]="stats.totalActiveTenants.toString()"
+  icon="👤"
+  color="purple"
+  [subtitle]="stats.pendingTenants + ' pending'" />
+
+<app-stat-card
+  title="Collected This Month"
+  [value]="formatCurrency(stats.currentMonthCollection)"
+  icon="💰"
+  color="green"
+  subtitle="Rent received" />
+
+<app-stat-card
+  title="Outstanding Dues"
+  [value]="formatCurrency(stats.totalOutstandingAmount)"
+  icon="⚠"
+  [color]="stats.totalOutstandingAmount > 0 ? 'red' : 'green'"
+  subtitle="Pending collection" />
+ 
+  </div>
+ 
+  <!-- Summary Row -->
+  <div class="summary-row">
+ 
+    <!-- Occupancy Bar -->
+    <div class="card summary-card">
+      <h3>Occupancy Rate</h3>
+      <p class="big-percent">{{ formatRate(stats.occupancyRatePercent) }}</p>
+      <div class="progress-bar-bg">
+        <div
+          class="progress-bar-fill"
+         [style.width]="stats.occupancyRatePercent + '%'"
+[ngClass]="{
+  'fill-green':  stats.occupancyRatePercent >= 75,
+  'fill-orange': stats.occupancyRatePercent >= 50 && stats.occupancyRatePercent < 75,
+  'fill-red':    stats.occupancyRatePercent < 50
+}">
+        </div>
+      </div>
+      <div class="progress-labels">
+        <span>{{ stats.occupiedRooms }} occupied</span>
+        <span>{{ stats.availableRooms }} available</span>
+      </div>
+    </div>
+ 
+    <!-- Quick Stats -->
+    <div class="card summary-card">
+      <h3>Quick Summary</h3>
+      <div class="quick-stats">
+        <div class="quick-stat-row">
+  <span class="qs-label">Total Rooms</span>
+  <span class="qs-value">{{ stats.totalRooms }}</span>
 </div>
+<div class="quick-stat-row">
+  <span class="qs-label">Occupied</span>
+  <span class="qs-value green">{{ stats.occupiedRooms }}</span>
+</div>
+<div class="quick-stat-row">
+  <span class="qs-label">Available</span>
+  <span class="qs-value blue">{{ stats.availableRooms }}</span>
+</div>
+<div class="quick-stat-row">
+  <span class="qs-label">Active Tenants</span>
+  <span class="qs-value">{{ stats.totalActiveTenants }}</span>
+</div>
+<div class="quick-stat-row">
+  <span class="qs-label">Collected</span>
+  <span class="qs-value green">{{ formatCurrency(stats.currentMonthCollection) }}</span>
+</div>
+<div class="quick-stat-row">
+  <span class="qs-label">Outstanding</span>
+  <span class="qs-value" [class.red]="stats.totalOutstandingAmount > 0">
+    {{ formatCurrency(stats.totalOutstandingAmount) }}
+  </span>
+</div>
+      </div>
+    </div>
+ 
+  </div>
+}
