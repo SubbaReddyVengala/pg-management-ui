@@ -1,18 +1,91 @@
-.page-subtitle {
-  color: #6B7C93;
-  font-size: 14px;
-  margin-top: 4px;
-}
- 
-/* 5-column stats grid */
+/* Stats grid */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(6, 1fr);  /* always 6 equal columns */
+  gap: 16px;
   margin-bottom: 24px;
 }
- 
-/* Skeleton loading cards */
+
+/* Responsive — 3 columns on smaller screens */
+@media (max-width: 1200px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Summary row */
+.summary-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.summary-card {
+  padding: 24px;
+}
+
+.summary-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1E3A5F;
+  margin-bottom: 16px;
+}
+
+/* Occupancy — remove empty space */
+.occupancy-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.big-percent {
+  font-size: 42px;
+  font-weight: 700;
+  color: #1E3A5F;
+  line-height: 1;
+}
+
+.occupancy-badge {
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.progress-bar-bg {
+  height: 12px;
+  background: #f0f2f5;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.8s ease;
+  min-width: 4px;    /* always visible even at 0% */
+}
+
+.fill-green  { background: #1A7A4A; }
+.fill-orange { background: #E67E22; }
+.fill-red    { background: #BDC3C7; }  /* gray when 0% — looks cleaner */
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #6B7C93;
+}
+
+/* Skeleton loading */
 .skeleton-card {
   height: 110px;
   background: linear-gradient(90deg, #f0f2f5 25%, #e0e3e9 50%, #f0f2f5 75%);
@@ -20,12 +93,12 @@
   animation: shimmer 1.4s infinite;
   border-radius: 14px;
 }
- 
+
 @keyframes shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
- 
+
 /* Error box */
 .error-box {
   background: #FDEDEC;
@@ -37,72 +110,66 @@
   margin-bottom: 24px;
 }
 .error-box p { margin-bottom: 12px; font-weight: 500; }
- 
-/* Summary row below stat cards */
-.summary-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
- 
-.summary-card { padding: 24px; }
-.summary-card h3 {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1E3A5F;
-  margin-bottom: 16px;
-}
- 
-/* Occupancy progress bar */
-.big-percent {
-  font-size: 42px;
-  font-weight: 700;
-  color: #1E3A5F;
-  margin-bottom: 14px;
-}
- 
-.progress-bar-bg {
-  height: 12px;
-  background: #f0f2f5;
-  border-radius: 99px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
- 
-.progress-bar-fill {
-  height: 100%;
-  border-radius: 99px;
-  transition: width 0.6s ease;
-}
- 
-.fill-green  { background: #1A7A4A; }
-.fill-orange { background: #E67E22; }
-.fill-red    { background: #E74C3C; }
- 
-.progress-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
+
+/* Page subtitle */
+.page-subtitle {
   color: #6B7C93;
+  font-size: 14px;
+  margin-top: 4px;
 }
- 
-/* Quick stats table */
+
+/* Quick stats */
 .quick-stats {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 2px;
 }
- 
-.quick-stat-row {
+
+.qs-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #f0f2f5;
+  padding: 9px 12px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
 }
- 
-.qs-label { color: #6B7C93; font-size: 13px; }
-.qs-value { font-weight: 600; font-size: 14px; color: #1E3A5F; }
-.qs-value.green { color: #1A7A4A; }
-.qs-value.blue  { color: #2E86AB; }
-.qs-value.red   { color: #E74C3C; }
+
+.qs-row:hover { background: #f8f9fb; }
+
+.qs-icon-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qs-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.qs-dot.blue   { background: #2E86AB; }
+.qs-dot.green  { background: #1A7A4A; }
+.qs-dot.orange { background: #E67E22; }
+.qs-dot.purple { background: #6C3483; }
+.qs-dot.red    { background: #E74C3C; }
+
+.qs-label { font-size: 13px; color: #6B7C93; }
+
+.qs-value {
+  font-weight: 700;
+  font-size: 14px;
+  color: #1E3A5F;
+}
+.qs-value.green  { color: #1A7A4A; }
+.qs-value.blue   { color: #2E86AB; }
+.qs-value.orange { color: #E67E22; }
+.qs-value.purple { color: #6C3483; }
+.qs-value.red    { color: #E74C3C; }
+
+.qs-divider {
+  height: 1px;
+  background: #f0f2f5;
+  margin: 6px 0;
+}

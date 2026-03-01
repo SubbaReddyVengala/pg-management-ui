@@ -1,53 +1,73 @@
 .stat-card {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   background: #ffffff;
   border-radius: 14px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.06);
   border-left: 5px solid #2E86AB;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 110px;
+  height: 110px;        /* fixed height — all cards identical */
+  overflow: hidden;
 }
- 
+
 .stat-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
- 
-/* Color variants via ngClass */
+
+/* Color variants */
 .stat-card.blue   { border-left-color: #2E86AB; }
 .stat-card.green  { border-left-color: #1A7A4A; }
 .stat-card.orange { border-left-color: #E67E22; }
 .stat-card.red    { border-left-color: #E74C3C; }
 .stat-card.purple { border-left-color: #6C3483; }
- 
-.card-left { flex: 1; }
- 
+
+.card-left {
+  flex: 1;
+  min-width: 0;       /* allows text to shrink */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
 .card-title {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 11px;    /* smaller — prevents wrapping */
+  font-weight: 700;
   color: #6B7C93;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 8px;
+  white-space: nowrap;       /* never wrap to second line */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 6px;
 }
- 
+
 .card-value {
-  font-size: 32px;
+  font-size: 26px;    /* fixed size — same for all cards */
   font-weight: 700;
   color: #1E3A5F;
-  line-height: 1;
+  line-height: 1.1;
+  white-space: nowrap;       /* never wrap ₹8,500 to next line */
+  overflow: hidden;
+  text-overflow: ellipsis;   /* shows ₹8,5... if still too long */
   margin-bottom: 4px;
 }
- 
+
 .card-subtitle {
-  font-size: 12px;
+  font-size: 11px;
   color: #95A5A6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
- 
+
 .card-icon {
-  font-size: 40px;
-  opacity: 0.8;
-  margin-left: 16px;
+  font-size: 32px;
+  opacity: 0.75;
+  margin-left: 12px;
+  flex-shrink: 0;     /* icon never shrinks */
 }

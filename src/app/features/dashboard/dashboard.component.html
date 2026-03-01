@@ -30,102 +30,155 @@
  
 <!-- Stats Grid — shown when data loaded -->
 @if (!isLoading && !errorMsg && stats) {
- 
+
   <div class="stats-grid">
- 
+
     <app-stat-card
-  title="Total Rooms"
-  [value]="stats.totalRooms.toString()"
-  icon="🏠"
-  color="blue"
-  [subtitle]="stats.availableRooms + ' available'" />
+      title="Total Rooms"
+      [value]="stats.totalRooms.toString()"
+      icon="🏠"
+      color="blue"
+      [subtitle]="stats.availableRooms + ' available'" />
 
-<app-stat-card
-  title="Occupied Rooms"
-  [value]="stats.occupiedRooms.toString()"
-  icon="🔑"
-  color="green"
-  [subtitle]="formatRate(stats.occupancyRatePercent) + ' occupancy rate'" />
+    <app-stat-card
+      title="Occupied"
+      [value]="stats.occupiedRooms.toString()"
+      icon="🔑"
+      color="green"
+      [subtitle]="formatRate(stats.occupancyRatePercent) + ' rate'" />
 
-<app-stat-card
-  title="Active Tenants"
-  [value]="stats.totalActiveTenants.toString()"
-  icon="👤"
-  color="purple"
-  [subtitle]="stats.pendingTenants + ' pending'" />
+    <app-stat-card
+      title="Maintenance"
+      [value]="stats.maintenanceRooms.toString()"
+      icon="🔧"
+      color="orange"
+      subtitle="Under maintenance" />
 
-<app-stat-card
-  title="Collected This Month"
-  [value]="formatCurrency(stats.currentMonthCollection)"
-  icon="💰"
-  color="green"
-  subtitle="Rent received" />
+    <app-stat-card
+      title="Active Tenants"
+      [value]="stats.totalActiveTenants.toString()"
+      icon="👤"
+      color="purple"
+      [subtitle]="stats.pendingTenants + ' pending'" />
 
-<app-stat-card
-  title="Outstanding Dues"
-  [value]="formatCurrency(stats.totalOutstandingAmount)"
-  icon="⚠"
-  [color]="stats.totalOutstandingAmount > 0 ? 'red' : 'green'"
-  subtitle="Pending collection" />
- 
+    <app-stat-card
+      title="Collected"
+      [value]="formatCurrency(stats.currentMonthCollection)"
+      icon="💰"
+      color="green"
+      subtitle="This month" />
+
+    <app-stat-card
+      title="Outstanding"
+      [value]="formatCurrency(stats.totalOutstandingAmount)"
+      icon="⚠"
+      [color]="stats.totalOutstandingAmount > 0 ? 'red' : 'green'"
+      [subtitle]="stats.outstandingDuesCount + ' dues pending'" />
+
   </div>
  
   <!-- Summary Row -->
   <div class="summary-row">
- 
-    <!-- Occupancy Bar -->
+
+    <!-- Occupancy Bar Card -->
     <div class="card summary-card">
       <h3>Occupancy Rate</h3>
-      <p class="big-percent">{{ formatRate(stats.occupancyRatePercent) }}</p>
+      <div class="occupancy-header">
+        <span class="big-percent">{{ formatRate(stats.occupancyRatePercent) }}</span>
+        <span class="occupancy-badge"
+          [ngClass]="{
+            'badge-success': stats.occupancyRatePercent >= 75,
+            'badge-warning': stats.occupancyRatePercent >= 50 && stats.occupancyRatePercent < 75,
+            'badge-danger':  stats.occupancyRatePercent < 50
+          }">
+          {{ stats.occupancyRatePercent >= 75 ? 'High' :
+             stats.occupancyRatePercent >= 50 ? 'Medium' : 'Low' }}
+        </span>
+      </div>
       <div class="progress-bar-bg">
-        <div
-          class="progress-bar-fill"
-         [style.width]="stats.occupancyRatePercent + '%'"
-[ngClass]="{
-  'fill-green':  stats.occupancyRatePercent >= 75,
-  'fill-orange': stats.occupancyRatePercent >= 50 && stats.occupancyRatePercent < 75,
-  'fill-red':    stats.occupancyRatePercent < 50
-}">
+        <div class="progress-bar-fill"
+          [style.width]="stats.occupancyRatePercent + '%'"
+          [ngClass]="{
+            'fill-green':  stats.occupancyRatePercent >= 75,
+            'fill-orange': stats.occupancyRatePercent >= 50 && stats.occupancyRatePercent < 75,
+            'fill-red':    stats.occupancyRatePercent < 50
+          }">
         </div>
       </div>
       <div class="progress-labels">
         <span>{{ stats.occupiedRooms }} occupied</span>
         <span>{{ stats.availableRooms }} available</span>
+        <span>{{ stats.maintenanceRooms }} maintenance</span>
       </div>
     </div>
- 
-    <!-- Quick Stats -->
+
+    <!-- Quick Summary Card — attractive version -->
     <div class="card summary-card">
       <h3>Quick Summary</h3>
       <div class="quick-stats">
-        <div class="quick-stat-row">
-  <span class="qs-label">Total Rooms</span>
-  <span class="qs-value">{{ stats.totalRooms }}</span>
-</div>
-<div class="quick-stat-row">
-  <span class="qs-label">Occupied</span>
-  <span class="qs-value green">{{ stats.occupiedRooms }}</span>
-</div>
-<div class="quick-stat-row">
-  <span class="qs-label">Available</span>
-  <span class="qs-value blue">{{ stats.availableRooms }}</span>
-</div>
-<div class="quick-stat-row">
-  <span class="qs-label">Active Tenants</span>
-  <span class="qs-value">{{ stats.totalActiveTenants }}</span>
-</div>
-<div class="quick-stat-row">
-  <span class="qs-label">Collected</span>
-  <span class="qs-value green">{{ formatCurrency(stats.currentMonthCollection) }}</span>
-</div>
-<div class="quick-stat-row">
-  <span class="qs-label">Outstanding</span>
-  <span class="qs-value" [class.red]="stats.totalOutstandingAmount > 0">
-    {{ formatCurrency(stats.totalOutstandingAmount) }}
-  </span>
-</div>
+
+        <div class="qs-row">
+          <div class="qs-icon-label">
+            <span class="qs-dot blue"></span>
+            <span class="qs-label">Total Rooms</span>
+          </div>
+          <span class="qs-value">{{ stats.totalRooms }}</span>
+        </div>
+
+        <div class="qs-row">
+          <div class="qs-icon-label">
+            <span class="qs-dot green"></span>
+            <span class="qs-label">Occupied</span>
+          </div>
+          <span class="qs-value green">{{ stats.occupiedRooms }}</span>
+        </div>
+
+        <div class="qs-row">
+          <div class="qs-icon-label">
+            <span class="qs-dot blue"></span>
+            <span class="qs-label">Available</span>
+          </div>
+          <span class="qs-value blue">{{ stats.availableRooms }}</span>
+        </div>
+
+        <div class="qs-row">
+          <div class="qs-icon-label">
+            <span class="qs-dot orange"></span>
+            <span class="qs-label">Maintenance</span>
+          </div>
+          <span class="qs-value orange">{{ stats.maintenanceRooms }}</span>
+        </div>
+
+        <div class="qs-divider"></div>
+
+        <div class="qs-row">
+          <div class="qs-icon-label">
+            <span class="qs-dot purple"></span>
+            <span class="qs-label">Active Tenants</span>
+          </div>
+          <span class="qs-value purple">{{ stats.totalActiveTenants }}</span>
+        </div>
+
+        <div class="qs-row">
+          <div class="qs-icon-label">
+            <span class="qs-dot green"></span>
+            <span class="qs-label">Collected</span>
+          </div>
+          <span class="qs-value green">{{ formatCurrency(stats.currentMonthCollection) }}</span>
+        </div>
+
+        <div class="qs-row">
+          <div class="qs-icon-label">
+            <span class="qs-dot red"></span>
+            <span class="qs-label">Outstanding</span>
+          </div>
+          <span class="qs-value" [class.red]="stats.totalOutstandingAmount > 0">
+            {{ formatCurrency(stats.totalOutstandingAmount) }}
+          </span>
+        </div>
+
       </div>
     </div>
- 
+
   </div>
 }
