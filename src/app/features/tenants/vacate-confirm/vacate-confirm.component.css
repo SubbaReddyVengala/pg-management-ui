@@ -1,0 +1,17 @@
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:100; }
+.confirm-dialog {
+  position:fixed; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  background:#fff; border-radius:16px; padding:40px;
+  z-index:101; width:400px; text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.2);
+  animation:popIn 0.2s ease;
+}
+@keyframes popIn {
+  from { transform:translate(-50%,-50%) scale(0.85); opacity:0; }
+  to   { transform:translate(-50%,-50%) scale(1);    opacity:1; }
+}
+.confirm-icon { font-size:48px; margin-bottom:16px; }
+.confirm-dialog h3 { font-size:18px; color:#1E3A5F; margin-bottom:10px; }
+.confirm-dialog p { color:#6B7C93; font-size:14px; margin-bottom:28px; line-height:1.5; }
+.confirm-actions { display:flex; gap:12px; justify-content:center; }

@@ -1,7 +1,134 @@
 <div class="page-header">
-  <h1>Tenants</h1>
-  <span class="badge badge-info">Phase 3</span>
+  <div>
+    <h1>Tenant Management</h1>
+    <p class="page-subtitle">Register and manage all tenants</p>
+  </div>
+  <button class="btn btn-primary" (click)="openRegister()">
+    + Register Tenant
+  </button>
 </div>
-<div class="card">
-  <p>Tenants content will be added in Phase 3.</p>
+ 
+<!-- Filters -->
+<div class="filters-bar">
+  <div class="search-box">
+    <input type="text" placeholder="Search by name or email..."
+           [(ngModel)]="searchText"
+           (ngModelChange)="onFilterChange()" />
+  </div>
+  <div class="status-filters">
+    @for (status of statusOptions; track status) {
+      <button class="filter-btn"
+              [class.active]="selectedStatus === status"
+              (click)="selectedStatus = status; onFilterChange()">
+        {{ status }}
+      </button>
+    }
+  </div>
 </div>
+ 
+@if (errorMsg) {
+  <div class="error-box">⚠ {{ errorMsg }}</div>
+}
+ 
+@if (isLoading) {
+  <div class="card"><p class="loading-text">Loading tenants...</p></div>
+}
+ 
+@if (!isLoading && filteredTenants.length > 0) {
+  <div class="card table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Tenant</th>
+          <th>Phone</th>
+          <th>Room</th>
+          <th>Security Deposit</th>
+          <th>Join Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (tenant of filteredTenants; track tenant.id) {
+          <tr>
+            <td>
+              <div class="tenant-info">
+                <div class="tenant-avatar">
+                  {{ tenant.fullName.charAt(0).toUpperCase() }}
+                </div>
+                <div>
+                  <p class="tenant-name">{{ tenant.fullName }}</p>
+                  <p class="tenant-email">{{ tenant.email }}</p>
+                </div>
+              </div>
+            </td>
+            <td>{{ tenant.phone }}</td>
+            <td>
+  @if (tenant.roomId) {
+    <span class="room-badge">🏠 Room {{ tenant.roomId }}</span>
+  } @else {
+    <span class="no-room">Not assigned</span>
+  }
+</td>
+      
+            <td>₹{{ tenant.securityDeposit.toLocaleString("en-IN") }}</td>
+            <td>{{ tenant.joinDate | slice:0:10 }}</td>
+            <td>
+              <span class="badge" [ngClass]="getStatusClass(tenant.status)">
+                {{ tenant.status }}
+              </span>
+            </td>
+            <td>
+               <div class="action-btns">
+    @if (!tenant.roomId) {
+      <button class="btn-action assign" (click)="openAssignRoom(tenant)">
+        Assign Room
+      </button>
+    } @else {
+      <button class="btn-action vacate" (click)="openVacate(tenant)">
+        Checkout
+      </button>
+    }
+  </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+ 
+@if (!isLoading && filteredTenants.length === 0 && !errorMsg) {
+  <div class="card empty-state">
+    <p class="empty-icon">👤</p>
+    <p class="empty-title">No tenants found</p>
+    <p class="empty-sub">
+      @if (searchText || selectedStatus !== "ALL") {
+        Try changing your filters
+      } @else {
+        Click "Register Tenant" to add your first tenant
+      }
+    </p>
+  </div>
+}
+ 
+<!-- Modals -->
+@if (showTenantForm) {
+  <app-tenant-form
+    (registered)="onTenantRegistered()"
+    (cancelled)="onTenantFormCancelled()" />
+}
+ 
+@if (showAssignRoom && selectedTenant) {
+  <app-assign-room
+    [tenant]="selectedTenant"
+    (assigned)="onRoomAssigned()"
+    (cancelled)="onAssignCancelled()" />
+}
+ 
+@if (showVacateConfirm && selectedTenant) {
+  <app-vacate-confirm
+    [tenant]="selectedTenant"
+    (confirmed)="onVacateConfirmed()"
+    (cancelled)="onVacateCancelled()" />
+}

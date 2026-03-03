@@ -1,0 +1,46 @@
+<div class="modal-overlay" (click)="onCancel()"></div>
+<div class="confirm-dialog">
+ 
+  <h3>Assign Room</h3>
+  <p class="assign-subtitle">
+    Assigning room to <strong>{{ tenant.fullName }}</strong>
+  </p>
+ 
+  @if (errorMsg) {
+    <div class="assign-error">⚠ {{ errorMsg }}</div>
+  }
+ 
+  <form [formGroup]="assignForm" (ngSubmit)="onSubmit()">
+ 
+    <div class="form-group">
+      <label>Select Available Room *</label>
+      @if (isLoadingRooms) {
+        <p class="loading-text">Loading rooms...</p>
+      } @else if (availableRooms.length === 0) {
+        <p class="no-rooms-text">No available rooms at the moment</p>
+      } @else {
+        <select formControlName="roomId">
+          <option [value]="null" disabled>-- Select a room --</option>
+          @for (room of availableRooms; track room.id) {
+            <option [value]="room.id">
+              Room {{ room.roomNumber }} — Floor {{ room.floor }}
+              — {{ room.roomType }}
+              — ₹{{ room.monthlyRent.toLocaleString("en-IN") }}/mo
+            </option>
+          }
+        </select>
+      }
+    </div>
+ 
+    <div class="confirm-actions">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary"
+              [disabled]="isSubmitting || availableRooms.length === 0">
+        @if (isSubmitting) { Assigning... } @else { Assign Room }
+      </button>
+    </div>
+ 
+  </form>
+</div>

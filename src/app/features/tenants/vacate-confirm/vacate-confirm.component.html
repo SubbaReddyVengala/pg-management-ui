@@ -1,0 +1,14 @@
+<div class="modal-overlay" (click)="cancelled.emit()"></div>
+<div class="confirm-dialog">
+  <div class="confirm-icon">🚪</div>
+  <h3>Checkout {{ tenant.fullName }}?</h3>
+  <p>
+    This will check out <strong>{{ tenant.fullName }}</strong>
+    from Room ID <strong>{{ tenant.roomId }}</strong>.
+    The room will become available again.
+  </p>
+  <div class="confirm-actions">
+    <button class="btn btn-secondary" (click)="cancelled.emit()">Cancel</button>
+    <button class="btn btn-danger" (click)="confirmed.emit()">Yes, Checkout</button>
+  </div>
+</div>

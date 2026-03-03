@@ -1,0 +1,33 @@
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45); z-index: 100;
+}
+.confirm-dialog {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff; border-radius: 16px;
+  padding: 36px; z-index: 101; width: 440px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: popIn 0.2s ease;
+}
+@keyframes popIn {
+  from { transform: translate(-50%,-50%) scale(0.85); opacity:0; }
+  to   { transform: translate(-50%,-50%) scale(1);    opacity:1; }
+}
+.confirm-dialog h3 { font-size: 18px; color: #1E3A5F; margin-bottom: 6px; }
+.assign-subtitle { font-size: 14px; color: #6B7C93; margin-bottom: 20px; }
+.assign-error {
+  background: #FDEDEC; color: #922B21; padding: 10px 14px;
+  border-radius: 8px; font-size: 13px; margin-bottom: 16px;
+}
+.form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.form-group label { font-size: 13px; font-weight: 600; color: #2C3E50; }
+.form-group select {
+  padding: 10px 12px; border: 1.5px solid #dde1e7;
+  border-radius: 8px; font-size: 14px; outline: none;
+  background: #fff; cursor: pointer;
+}
+.form-group select:focus { border-color: #2E86AB; }
+.loading-text, .no-rooms-text { color: #6B7C93; font-size: 14px; }
+.no-rooms-text { color: #E74C3C; }
+.confirm-actions { display: flex; gap: 12px; justify-content: flex-end; }
