@@ -29,20 +29,22 @@ export class TenantFormComponent implements OnInit {
   errorMsg  = '';
  
   ngOnInit(): void {
-    this.tenantForm = this.fb.group({
-      name:            ['', Validators.required],
-      email:           ['', [Validators.required, Validators.email]],
-      password:        ['', [Validators.required, Validators.minLength(6)]],
-      phone:           ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
-      securityDeposit: [0,  [Validators.required, Validators.min(0)]],
-    });
-  }
+  this.tenantForm = this.fb.group({
+    name:             ['',   Validators.required],
+    email:            ['',   [Validators.required, Validators.email]],
+    password:         ['',   [Validators.required, Validators.minLength(6)]],
+    phone:            ['',   [Validators.required, Validators.pattern('[0-9]{10}')]],
+    emergencyContact: ['',   [Validators.required, Validators.pattern('[0-9]{10}')]],  // ADD
+    securityDeposit:  [null, [Validators.required, Validators.min(0)]],               // null not 0
+  });
+}
  
   fc(name: string) { return this.tenantForm.get(name)!; }
  
   onSubmit(): void {
     if (this.tenantForm.invalid) {
       this.tenantForm.markAllAsTouched();
+      this.cdr.detectChanges();
       return;
     }
  

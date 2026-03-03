@@ -20,7 +20,7 @@ export interface CreateTenantRequest {
   fullName: string;
   email: string;
   phone: string;
-  emergencyContact?: string;
+  emergencyContact: string;
   securityDeposit: number;
 }
 

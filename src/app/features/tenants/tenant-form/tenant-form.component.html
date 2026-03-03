@@ -60,19 +60,26 @@
         }
       </div>
       <div class="form-group">
-        <label>Emergency Contact *</label>
-        <input type="text" formControlName="emergencycontact" placeholder="10-digit number"
-               [class.input-error]="fc('emergencycontact').invalid && fc('emergencycontact').touched" />
-        @if (fc("emergencycontact").touched && fc("emergencycontact").hasError("pattern")) {
-          <span class="field-error">Enter a valid 10-digit number</span>
-        }
-      </div>
+  <label>Emergency Contact *</label>
+  <input type="text" formControlName="emergencyContact"
+         placeholder="10-digit number"
+         [class.input-error]="fc('emergencyContact').invalid && fc('emergencyContact').touched" />
+  @if (fc("emergencyContact").touched && fc("emergencyContact").hasError("required")) {
+    <span class="field-error">Emergency contact is required</span>
+  }
+  @if (fc("emergencyContact").touched && fc("emergencyContact").hasError("pattern")) {
+    <span class="field-error">Enter a valid 10-digit number</span>
+  }
+</div>
       <div class="form-group">
-        <label>Security Deposit (₹) *</label>
-        <input type="number" formControlName="securityDeposit" min="0"
-               placeholder="e.g. 17000"
-               [class.input-error]="fc('securityDeposit').invalid && fc('securityDeposit').touched" />
-      </div>
+  <label>Security Deposit (₹) *</label>
+  <input type="number" formControlName="securityDeposit" min="0"
+         placeholder="e.g. 17000"
+         [class.input-error]="fc('securityDeposit').invalid && fc('securityDeposit').touched" />
+  @if (fc("securityDeposit").touched && fc("securityDeposit").hasError("required")) {
+    <span class="field-error">Security deposit is required</span>
+  }
+</div>
     </div>
  
     <div class="modal-actions">
@@ -80,8 +87,8 @@
         Cancel
       </button>
       <button type="submit" class="btn btn-primary" [disabled]="isLoading">
-        @if (isLoading) { Registering... } @else { Register Tenant }
-      </button>
+  {{ isLoading ? 'Registering...' : 'Register Tenant' }}
+</button>
     </div>
  
   </form>

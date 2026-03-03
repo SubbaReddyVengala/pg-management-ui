@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup,
          Validators, ReactiveFormsModule } from '@angular/forms';
 import { RoomService } from '../../../core/services/room.service';
 import { Room } from '../../../core/models/room.model';
- 
+
 @Component({
   selector: 'app-room-form',
   standalone: true,
@@ -13,34 +13,34 @@ import { Room } from '../../../core/models/room.model';
   styleUrl: './room-form.component.css'
 })
 export class RoomFormComponent implements OnInit {
- 
-  @Input()  room: Room | null = null;  // null = create, Room = edit
-  @Output() saved    = new EventEmitter<void>();
+
+  @Input()  room: Room | null = null;
+  @Output() saved     = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
- 
+
   private fb          = inject(FormBuilder);
   private roomService = inject(RoomService);
   private cdr         = inject(ChangeDetectorRef);
- 
+
   roomForm!: FormGroup;
   isLoading = false;
   errorMsg  = '';
- 
+
   get isEditMode(): boolean { return !!this.room; }
- 
+
   readonly roomTypes  = ['SINGLE', 'DOUBLE', 'TRIPLE'];
   readonly statusOpts = ['AVAILABLE', 'OCCUPIED', 'MAINTENANCE'];
- 
+
   ngOnInit(): void {
     this.roomForm = this.fb.group({
-      roomNumber:   ['', [Validators.required]],
-      floor:        [1,   [Validators.required, Validators.min(1)]],
-      roomType:     ['SINGLE', Validators.required],
-      maxCapacity:  [1,   [Validators.required, Validators.min(1), Validators.max(10)]],
-      monthlyRent:  [0,   [Validators.required, Validators.min(0)]],
-      amenities:    [''],
+      roomNumber:  ['',   [Validators.required]],
+      floor:       [null, [Validators.required, Validators.min(1)]],       // CHANGED: 1 -> null
+      roomType:    ['SINGLE', Validators.required],
+      maxCapacity: [null, [Validators.required, Validators.min(1), Validators.max(10)]], // CHANGED: 1 -> null
+      monthlyRent: [null, [Validators.required, Validators.min(0)]],       // CHANGED: 0 -> null
+      amenities:   [''],
     });
- 
+
     // Pre-fill form if editing
     if (this.room) {
       this.roomForm.patchValue({
@@ -53,19 +53,20 @@ export class RoomFormComponent implements OnInit {
       });
     }
   }
- 
+
   onSubmit(): void {
     if (this.roomForm.invalid) {
       this.roomForm.markAllAsTouched();
+      this.cdr.detectChanges();  // ADDED
       return;
     }
     this.isLoading = true;
     this.errorMsg  = '';
- 
+
     const call = this.isEditMode
       ? this.roomService.updateRoom(this.room!.id, this.roomForm.value)
       : this.roomService.createRoom(this.roomForm.value);
- 
+
     call.subscribe({
       next: () => {
         this.isLoading = false;
@@ -78,9 +79,8 @@ export class RoomFormComponent implements OnInit {
       }
     });
   }
- 
+
   onCancel(): void { this.cancelled.emit(); }
- 
-  // Quick access to form controls for template validation
+
   fc(name: string) { return this.roomForm.get(name)!; }
 }
