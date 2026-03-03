@@ -1,7 +1,122 @@
 <div class="page-header">
-  <h1>Payments</h1>
-  <span class="badge badge-info">Phase 3</span>
+  <div>
+    <h1>Payments & Dues</h1>
+    <p class="page-subtitle">Track rent collection and outstanding dues</p>
+  </div>
+  <button class="btn btn-primary" (click)="openGenerateMonthly()">
+    ⚡ Generate Monthly Rent
+  </button>
 </div>
-<div class="card">
-  <p>Payments content will be added in Phase 3.</p>
-</div>
+ 
+<!-- Summary Cards -->
+@if (!isLoading && dues.length >= 0) {
+  <div class="summary-cards">
+    <div class="summary-card red">
+      <p class="sc-label">Total Due</p>
+      <p class="sc-value">
+        {{ formatCurrency(dues.reduce((s, d) => s + d.dueAmount, 0)) }}
+      </p>
+      <p class="sc-sub">{{ dues.length }} records</p>
+    </div>
+    <div class="summary-card orange">
+      <p class="sc-label">Partially Paid</p>
+      <p class="sc-value">
+        {{ dues.filter(d => d.status === "PARTIAL").length }}
+      </p>
+      <p class="sc-sub">records</p>
+    </div>
+    <div class="summary-card blue">
+      <p class="sc-label">Unpaid (DUE)</p>
+      <p class="sc-value">
+        {{ dues.filter(d => d.status === "DUE").length }}
+      </p>
+      <p class="sc-sub">records</p>
+    </div>
+  </div>
+}
+ 
+@if (errorMsg) {
+  <div class="error-box">⚠ {{ errorMsg }}</div>
+}
+ 
+@if (isLoading) {
+  <div class="card"><p class="loading-text">Loading dues...</p></div>
+}
+ 
+<!-- Outstanding Dues Table -->
+@if (!isLoading) {
+  <div class="card table-card">
+    <div class="table-header">
+      <h3>Outstanding Dues</h3>
+      <button class="btn btn-outline" (click)="loadDues()">↻ Refresh</button>
+    </div>
+ 
+    @if (dues.length === 0) {
+      <div class="empty-state">
+        <p class="empty-icon">✅</p>
+        <p class="empty-title">No outstanding dues!</p>
+        <p class="empty-sub">
+          All tenants are up to date. Click "Generate Monthly Rent" to
+          create next month's records.
+        </p>
+      </div>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Tenant ID</th>
+            <th>Room ID</th>
+            <th>Rent Amount</th>
+            <th>Paid So Far</th>
+            <th>Due Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (record of dues; track record.id) {
+            <tr>
+              <td>
+                <strong>
+                  {{ MONTH_NAMES[record.rentMonth] }} {{ record.rentYear }}
+                </strong>
+              </td>
+              <td>Tenant #{{ record.tenantId }}</td>
+              <td>Room #{{ record.roomId }}</td>
+              <td>{{ formatCurrency(record.rentAmount) }}</td>
+              <td class="paid-amount">{{ formatCurrency(record.totalPaid) }}</td>
+              <td class="due-amount">{{ formatCurrency(record.dueAmount) }}</td>
+              <td>
+                <span class="badge" [ngClass]="getStatusClass(record.status)">
+                  {{ record.status }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-action pay"
+                        (click)="openRecordPayment(record)">
+                  💳 Pay
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+}
+ 
+<!-- Record Payment Modal -->
+@if (showRecordPayment && selectedRecord) {
+  <app-record-payment
+    [rentRecord]="selectedRecord"
+    (paid)="onPaymentRecorded()"
+    (cancelled)="onPaymentCancelled()" />
+}
+ 
+<!-- Generate Monthly Modal -->
+@if (showGenerateMonthly) {
+  <app-generate-monthly
+    (generated)="onMonthlyGenerated()"
+    (cancelled)="onGenerateCancelled()" />
+}

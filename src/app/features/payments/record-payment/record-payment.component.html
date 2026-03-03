@@ -1,0 +1,79 @@
+<div class="modal-overlay" (click)="onCancel()"></div>
+<div class="modal-panel">
+ 
+  <div class="modal-header">
+    <div>
+      <h2>Record Payment</h2>
+      <p class="modal-subtitle">
+        {{ MONTH_NAMES[rentRecord.rentMonth] }} {{ rentRecord.rentYear }}
+        — Tenant #{{ rentRecord.tenantId }}
+      </p>
+    </div>
+    <button class="close-btn" (click)="onCancel()">✕</button>
+  </div>
+ 
+  <!-- Rent Summary -->
+  <div class="rent-summary">
+    <div class="rs-row">
+      <span>Total Rent</span>
+      <span>{{ formatCurrency(rentRecord.rentAmount) }}</span>
+    </div>
+    <div class="rs-row">
+      <span>Already Paid</span>
+      <span class="green">{{ formatCurrency(rentRecord.totalPaid) }}</span>
+    </div>
+    <div class="rs-row due">
+      <span>Amount Due</span>
+      <span class="red">{{ formatCurrency(rentRecord.dueAmount) }}</span>
+    </div>
+  </div>
+ 
+  @if (errorMsg) {
+    <div class="form-error-alert">⚠ {{ errorMsg }}</div>
+  }
+ 
+  <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()" class="modal-form">
+ 
+    <div class="form-group">
+      <label>Amount to Pay (₹) *</label>
+      <input type="number" formControlName="amountPaid"
+             [min]="1" [max]="rentRecord.dueAmount"
+             [class.input-error]="fc('amountPaid').invalid && fc('amountPaid').touched" />
+      @if (fc("amountPaid").touched && fc("amountPaid").hasError("min")) {
+        <span class="field-error">Amount must be at least ₹1</span>
+      }
+    </div>
+ 
+    <div class="form-group">
+      <label>Payment Mode *</label>
+      <div class="mode-buttons">
+        @for (mode of paymentModes; track mode) {
+          <button type="button"
+                  class="mode-btn"
+                  [class.active]="selectedMode === mode"
+                  (click)="fc('paymentMode').setValue(mode)">
+            {{ mode === "BANK_TRANSFER" ? "Bank Transfer" : mode }}
+          </button>
+        }
+      </div>
+    </div>
+ 
+    @if (showReference) {
+      <div class="form-group">
+        <label>Reference Number <span class="optional">(optional)</span></label>
+        <input type="text" formControlName="referenceNumber"
+               placeholder="UTR / Transaction ID / Cheque No." />
+      </div>
+    }
+ 
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+        @if (isLoading) { Recording... } @else { Record Payment }
+      </button>
+    </div>
+ 
+  </form>
+</div>
