@@ -1,35 +1,56 @@
-/* Stats grid */
+/* ── FIX 2: Stats grid — wraps properly, never overflows ── */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);  /* always 6 equal columns */
+  grid-template-columns: repeat(3, 1fr);   /* 3 per row — safe for all screens */
   gap: 16px;
   margin-bottom: 24px;
 }
 
-/* Responsive — 3 columns on smaller screens */
-@media (max-width: 1200px) {
+/* Wide screens — show all 6 in one row */
+@media (min-width: 1400px) {
+  .stats-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Medium screens — 3 per row */
+@media (min-width: 769px) and (max-width: 1399px) {
   .stats-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
+/* Tablet — 2 per row */
 @media (max-width: 768px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 }
 
-/* Summary row */
+/* Small phones — 1 per row */
+@media (max-width: 400px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Summary row ── */
 .summary-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-.summary-card {
-  padding: 24px;
+/* Stack vertically on mobile */
+@media (max-width: 768px) {
+  .summary-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
+.summary-card { padding: 24px; }
 .summary-card h3 {
   font-size: 15px;
   font-weight: 600;
@@ -37,7 +58,7 @@
   margin-bottom: 16px;
 }
 
-/* Occupancy — remove empty space */
+/* ── Occupancy ── */
 .occupancy-header {
   display: flex;
   align-items: center;
@@ -71,12 +92,12 @@
   height: 100%;
   border-radius: 99px;
   transition: width 0.8s ease;
-  min-width: 4px;    /* always visible even at 0% */
+  min-width: 4px;
 }
 
 .fill-green  { background: #1A7A4A; }
 .fill-orange { background: #E67E22; }
-.fill-red    { background: #BDC3C7; }  /* gray when 0% — looks cleaner */
+.fill-red    { background: #BDC3C7; }
 
 .progress-labels {
   display: flex;
@@ -85,7 +106,7 @@
   color: #6B7C93;
 }
 
-/* Skeleton loading */
+/* ── Skeleton ── */
 .skeleton-card {
   height: 110px;
   background: linear-gradient(90deg, #f0f2f5 25%, #e0e3e9 50%, #f0f2f5 75%);
@@ -99,7 +120,7 @@
   100% { background-position: -200% 0; }
 }
 
-/* Error box */
+/* ── Error box ── */
 .error-box {
   background: #FDEDEC;
   border: 1px solid #F1948A;
@@ -111,19 +132,15 @@
 }
 .error-box p { margin-bottom: 12px; font-weight: 500; }
 
-/* Page subtitle */
+/* ── Page subtitle ── */
 .page-subtitle {
   color: #6B7C93;
   font-size: 14px;
   margin-top: 4px;
 }
 
-/* Quick stats */
-.quick-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+/* ── Quick stats ── */
+.quick-stats { display: flex; flex-direction: column; gap: 2px; }
 
 .qs-row {
   display: flex;
@@ -133,14 +150,9 @@
   border-radius: 8px;
   transition: background 0.15s ease;
 }
-
 .qs-row:hover { background: #f8f9fb; }
 
-.qs-icon-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.qs-icon-label { display: flex; align-items: center; gap: 10px; }
 
 .qs-dot {
   width: 10px;
@@ -148,7 +160,6 @@
   border-radius: 50%;
   flex-shrink: 0;
 }
-
 .qs-dot.blue   { background: #2E86AB; }
 .qs-dot.green  { background: #1A7A4A; }
 .qs-dot.orange { background: #E67E22; }
@@ -157,19 +168,11 @@
 
 .qs-label { font-size: 13px; color: #6B7C93; }
 
-.qs-value {
-  font-weight: 700;
-  font-size: 14px;
-  color: #1E3A5F;
-}
+.qs-value { font-weight: 700; font-size: 14px; color: #1E3A5F; }
 .qs-value.green  { color: #1A7A4A; }
 .qs-value.blue   { color: #2E86AB; }
 .qs-value.orange { color: #E67E22; }
 .qs-value.purple { color: #6C3483; }
 .qs-value.red    { color: #E74C3C; }
 
-.qs-divider {
-  height: 1px;
-  background: #f0f2f5;
-  margin: 6px 0;
-}
+.qs-divider { height: 1px; background: #f0f2f5; margin: 6px 0; }

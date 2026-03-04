@@ -1,12 +1,95 @@
 .layout-wrapper {
   display: flex;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  background: #f4f6f9;
+  position: relative;
 }
- 
+
 .content-area {
   flex: 1;
-  overflow-y: auto;
-  background: #f5f6fa;
-  padding: 24px;
+  margin-left: 240px;          /* sidebar width */
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: margin-left 0.3s ease;
+  padding: 24px;               /* FIX 1: was missing — content was touching edges */
+}
+
+/* Mobile top bar — hidden on desktop */
+.mobile-topbar { display: none; }
+
+/* Overlay */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+}
+
+/* Hamburger */
+.hamburger-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  flex-shrink: 0;
+}
+.hamburger-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* Mobile brand */
+.mobile-brand { display: flex; align-items: center; gap: 8px; }
+.mobile-logo-mark {
+  background: #4f6af0;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 4px 7px;
+  border-radius: 6px;
+}
+.mobile-title { color: #fff; font-weight: 600; font-size: 1rem; }
+
+/* ── Tablet ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .content-area {
+    margin-left: 200px;
+    padding: 16px;
+  }
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .mobile-topbar {
+    display: flex;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: #1a2332;
+    z-index: 100;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .content-area {
+    margin-left: 0;
+    padding: 16px;
+    padding-top: calc(56px + 16px);  /* topbar height + padding */
+  }
+  .mobile-content { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .content-area {
+    padding: 12px;
+    padding-top: calc(56px + 12px);
+  }
 }
